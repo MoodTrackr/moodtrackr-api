@@ -180,9 +180,24 @@ app = tornado.web.Application([
 ])
 
 
+class RedirectHandler(tornado.web.RequestHandler):
+
+    def prepare(self):
+        if self.request.protocol == 'http':
+            self.redirect('https://' + self.request.host, permanent=False)
+
+    def get(self):
+        self.write("Hello, world")
+
+
 if __name__ == '__main__':
+    application = tornado.web.Application([
+        (r'/', RedirectHandler)
+    ])
+    application.listen(80)
     http_server = tornado.httpserver.HTTPServer(app, ssl_options={
-            "certfile": "test.pem",
+            "certfile": "/etc/letsencrypt/live/moodtrackr.com/fullchain.pem",
+            "keyfile": "/etc/letsencrypt/live/moodtrackr.com/privkey.pem"
     })
     http_server.listen(8080)
     tornado.ioloop.IOLoop.instance().start()

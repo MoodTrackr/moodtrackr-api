@@ -1,0 +1,4 @@
+#!/bin/bash
+
+cd /home/jupyter/Manipulate/moodtrackr-api
+python3 server.py
